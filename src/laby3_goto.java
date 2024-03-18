@@ -19,7 +19,7 @@ public class laby3_goto {
 	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_YELLOW = "\u001B[33m";
 	public static final String ANSI_PURPLE = "\033[0;35m";
-	public static final int 
+	public static final int distance = 150;// mm
 	public static int[][] carte = { { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
 			{ 0, 3, 1, 1, 3, 1, 1, 3, 0, 0 },
@@ -30,9 +30,24 @@ public class laby3_goto {
 			{ 0, 0, 0, 0, 1, 0, 0, 1, 0, 0 },
 			{ 0, 0, 0, 0, 2, 0, 0, 2, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+	public static int[][] carte2 = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+									{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, };
 
-	final static int ROWS = carte.length;
-	final static int COLS = carte[0].length;
+	final static int ROWS = carte.length;//lignes
+	final static int COLS = carte[0].length;//collones
 
 	public static ArrayList<Point> goTo(cardD direction) {
 
@@ -71,10 +86,10 @@ public class laby3_goto {
 			this.y = y;
 			this.orientation = orientation;
 		}
-		
-		public int avancerJusquaEvent(){ //fait avancer le robot jusqu'au prochain évènement.
+
+		public int avancerJusquaEvent() { // fait avancer le robot jusqu'au prochain évènement.
 			return 0;
-			
+
 		}
 	}
 
@@ -114,32 +129,42 @@ public class laby3_goto {
 	 * @param carte
 	 * @return
 	 */
-	public static Stack<Point> trouverTresor(int[][] carte, int startX, int startY, Robot r) {
+	public static Stack<Point> trouverTresor(int[][] carte, Robot r) {
 
 		boolean[][] visited = new boolean[ROWS][COLS];
+		int startX=0,startY=0;
 		Point startPoint;
 		switch (r.orientation) {
 			case North:
-			startPoint = new Point(startX+1, startY, 1, null);
+				startX=carte.length-2;//length => last row + 1
+				startY=carte.length/2;
+				startPoint = new Point(startX + 1, startY, 1, null);
 				break;
 			case South:
-			startPoint = new Point(startX-1, startY, 1, null);	
+				startX=1;
+				startY=carte.length/2;
+				startPoint = new Point(startX - 1, startY, 1, null);
 				break;
 			case East:
-			startPoint = new Point(startX, startY-1, 1, null);	
+				startX=carte.length/2;
+				startY=carte.length-2;
+				startPoint = new Point(startX, startY - 1, 1, null);
 				break;
 			case West:
-			startPoint = new Point(startX, startY+1, 1, null);	
+				startX=carte.length/2;
+				startY=1;
+				startPoint = new Point(startX, startY + 1, 1, null);
 				break;
 			default:
-			startPoint = new Point(startX, startY, 1, null);
+				startPoint = new Point(startX, startY, 1, null);
 				break;
 		}
 		ArrayList<Point> queue = new ArrayList<>();
 		Stack<Point> victorieuse = new Stack<>();
 
-		//queue.add(new Point(startX, startY, 0, startPoint));//premier point dans la queue
-		
+		// queue.add(new Point(startX, startY, 0, startPoint));//premier point dans la
+		// queue
+
 		while (!queue.isEmpty()) {
 			Point current = queue.remove(0);
 			int x = current.x;
@@ -210,8 +235,6 @@ public class laby3_goto {
 		Robot r = new Robot();
 		// choix des données de départ dans l'interface robot
 		r.orientation = cardD.South;
-		r.x = 1;
-		r.y = 4;
 		return r;
 	}
 }

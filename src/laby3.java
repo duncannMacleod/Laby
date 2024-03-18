@@ -12,6 +12,7 @@ public class laby3 {
 	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_YELLOW = "\u001B[33m";
 	public static final String ANSI_PURPLE = "\033[0;35m";
+	
 	static final int[][] carte = { { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
 									{ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
 									{ 0, 3, 1, 1, 3, 1, 1, 3, 0, 0 },
