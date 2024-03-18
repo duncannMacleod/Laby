@@ -49,11 +49,7 @@ public class laby3_goto {
 	final static int ROWS = carte.length;//lignes
 	final static int COLS = carte[0].length;//collones
 
-	public static ArrayList<Point> goTo(cardD direction) {
-
-		// TODO avancer dans la direction donnée et trouver
-		return null;
-	}
+	
 
 	static class Point {
 		int x;
@@ -87,7 +83,7 @@ public class laby3_goto {
 			this.orientation = orientation;
 		}
 		
-		public int avancerJusquaEvent(){ //fait avancer le robot jusqu'au prochain évènement. Retourne la valeur de distance parcourrue
+		public int avancerJusquaEvent(){ // TODO fait avancer le robot jusqu'au prochain évènement. Retourne la valeur de distance parcourrue
 			
 			//ColorSensor cs = new ColorSensor(SensorPort.S4);
 			//Motor.A.setSpeed(150); 
@@ -99,6 +95,26 @@ public class laby3_goto {
 			
 			return 0;
 
+		}
+		public ArrayList<Point> locatePathAtIntersection(){
+			//TODO tourner sur soi meme et trouver les prochaines casses à explorer + étapes de vérif (encore présente dans laby3)
+			return null;
+		}
+		public Point locatePathAtRoad(){
+			//TODO en fonction de l'orientation du robot, trouver le prochain point à explorer (celui devant soi) + plus vérif comme d'hab
+			return null;
+		}
+		public void goTo(Point pointGoal) {
+
+			// TODO se déplacer jusqu'à une case + doit s'orienter vers la dirrection encore non visité (doit de rendre à la case parent pour s'orienter vers la case )
+			
+		}
+		public boolean goToMandatory(int xGoal,int yGoal){//tester si le programme goto est obligatoire
+			int diffX = xGoal - this.x;
+			int diffY = yGoal - this.y;//utilise this pour plus de clarté
+			if (diffX>1||diffY>1)
+				return true;
+			return false;
 		}
 	}
 
@@ -171,15 +187,22 @@ public class laby3_goto {
 		ArrayList<Point> queue = new ArrayList<>();
 		Stack<Point> victorieuse = new Stack<>();
 
-		// queue.add(new Point(startX, startY, 0, startPoint));//premier point dans la
-		// queue
+		queue.add(new Point(startX, startY, 0, startPoint));//premier point dans la queue
 
 		while (!queue.isEmpty()) {
+			
 			Point current = queue.remove(0);
 			int x = current.x;
 			int y = current.y;
 
-			if (carte[x][y] == 4) {
+			if(r.goToMandatory(x,y)){
+				r.goTo(current);//se rend au point étudié en parcourant le labyrinthe
+			}
+			int distanceParent=r.avancerJusquaEvent();
+			ajoutCaseCarte(distanceParent,current,r);//écrit sur la carte l'avancée qui vient d'être faite
+
+
+			if (carte[x][y] == 4) {//à remplacer pour fonctionner sans carte... +création carte en meme temps ATTENTION si on crée la carte avant dans l'absolu sa marcherai
 				// Construire la branche victorieuse
 				while (current != null) {
 					victorieuse.push(current);
@@ -199,11 +222,11 @@ public class laby3_goto {
 			}
 
 			if (isIntersection) {
-				// TODO recherche intersection
+				queue.addAll(r.locatePathAtIntersection());
 			} else {
-				// TODO recherche même direction
+				queue.add(r.locatePathAtRoad());
 			}
-			triQueue(queue, x, y);
+			triQueue(queue,r);
 		}
 
 		// Si le trésor n'est pas trouvé, renvoyer une pile vide
@@ -213,7 +236,7 @@ public class laby3_goto {
 	public static void main(String[] args) {
 
 		Robot robot = initRobot();
-		Stack<Point> victorieuse = trouverTresor(carte, 1, 4, robot);
+		Stack<Point> victorieuse = trouverTresor(carte,robot);
 
 		if (!victorieuse.isEmpty()) {
 			System.out.println("Les mouvements pour atteindre le trésor et y repartir sont :");
@@ -226,20 +249,22 @@ public class laby3_goto {
 		}
 	}
 
-	public static ArrayList<Point> triQueue(ArrayList<Point> oldQueue, int x, int y) {
+	public static ArrayList<Point> triQueue(ArrayList<Point> oldQueue, Robot r) {
 		// Utilisation d'un comparateur personnalisé pour trier les points par distance
 		Collections.sort(oldQueue, new Comparator<Point>() {
 			@Override
 			public int compare(Point p1, Point p2) {
-				double distP1 = Math.sqrt(Math.pow(p1.x - x, 2) + Math.pow(p1.y - y, 2));
-				double distP2 = Math.sqrt(Math.pow(p2.x - x, 2) + Math.pow(p2.y - y, 2));
+				double distP1 = Math.sqrt(Math.pow(p1.x - r.x, 2) + Math.pow(p1.y - r.y, 2));
+				double distP2 = Math.sqrt(Math.pow(p2.x - r.x, 2) + Math.pow(p2.y - r.y, 2));
 				return Double.compare(distP1, distP2);
 			}
 		});
 
 		return oldQueue;
 	}
-
+	public static void ajoutCaseCarte(int distanceParent,Point caseEtudiee,Robot r){
+		//TODO écrire sur la carte l'avancée que le robot à fait
+	}
 	public static Robot initRobot() {
 		Robot r = new Robot();
 		// choix des données de départ dans l'interface robot
