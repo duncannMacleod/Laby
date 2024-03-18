@@ -19,7 +19,7 @@ public class laby3_goto {
 	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_YELLOW = "\u001B[33m";
 	public static final String ANSI_PURPLE = "\033[0;35m";
-	public static final int 
+	public static final int rayon = 25;//mm
 	public static int[][] carte = { { 0, 0, 0, 0, 2, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
 			{ 0, 3, 1, 1, 3, 1, 1, 3, 0, 0 },
@@ -72,7 +72,16 @@ public class laby3_goto {
 			this.orientation = orientation;
 		}
 		
-		public int avancerJusquaEvent(){ //fait avancer le robot jusqu'au prochain évènement.
+		public int avancerJusquaEvent(){ //fait avancer le robot jusqu'au prochain évènement. Retourne la valeur de distance parcourrue
+			
+			//ColorSensor cs = new ColorSensor(SensorPort.S4);
+			//Motor.A.setSpeed(150); 
+			//Motor.B.setSpeed(150);
+			//do{
+				//Motor.A.Foward();
+				//Motor.B.Foward();
+			//}while(cs.getColorID()==7);
+			
 			return 0;
 			
 		}
